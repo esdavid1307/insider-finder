@@ -7,9 +7,28 @@ from bs4 import BeautifulSoup, Tag
 
 from .utils import to_decimal
 
+# SEC Form 4 transaction codes, per the official Form 4 instructions.
 TRANSACTION_TYPES = {
-    "P": "Purchase",
-    "S": "Sale",
+    "P": "Purchase (open market)",
+    "S": "Sale (open market)",
+    "A": "Grant/Award",
+    "D": "Disposition to Issuer",
+    "F": "Tax Withholding",
+    "I": "Discretionary Transaction",
+    "M": "Option Exercise",
+    "C": "Conversion",
+    "E": "Expiration (short)",
+    "H": "Expiration (long)",
+    "O": "Out-of-Money Exercise",
+    "X": "In-the-Money Exercise",
+    "G": "Gift",
+    "L": "Small Acquisition",
+    "W": "Will/Inheritance",
+    "Z": "Voting Trust",
+    "J": "Other",
+    "K": "Equity Swap",
+    "U": "Tender of Shares",
+    "V": "Voluntarily Reported Early",
 }
 
 

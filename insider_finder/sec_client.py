@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from datetime import date
 from typing import Any
@@ -35,6 +36,17 @@ class Filing:
         return (
             f"{SEC_BASE_URL}/Archives/edgar/data/{normalize_cik(self.cik)}/"
             f"{clean_accession(self.accession_number)}/{self.primary_document}"
+        )
+
+    @property
+    def xml_url(self) -> str:
+        # primaryDocument is often "xslF345X06/form4.xml"; that path serves the
+        # XSL-rendered HTML view. The raw XML lives at the same filename without
+        # the stylesheet prefix.
+        raw_document = re.sub(r"^xslF345X\d+/", "", self.primary_document)
+        return (
+            f"{SEC_BASE_URL}/Archives/edgar/data/{normalize_cik(self.cik)}/"
+            f"{clean_accession(self.accession_number)}/{raw_document}"
         )
 
 
@@ -77,7 +89,7 @@ class SecClient:
         return self._get_json(f"{SEC_DATA_URL}/submissions/CIK{cik}.json")
 
     def fetch_filing_document(self, filing: Filing) -> str:
-        return self._get_text(filing.filing_url)
+        return self._get_text(filing.xml_url)
 
 
 def recent_form4_filings(submissions: dict[str, Any], cik: str, days: int) -> list[Filing]:
